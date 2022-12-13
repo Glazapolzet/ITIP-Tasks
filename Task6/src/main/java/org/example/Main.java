@@ -2,8 +2,8 @@ package org.example;
 
 import java.util.*;
 
-import java.util.Stack;
-import java.lang.Character;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class Main {
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class Main {
         System.out.println(getHashTags("How the Avocado Became the Fruit of the Global Trade?"));
         System.out.println(getHashTags("Why You Will Probably Pay More for Your Christmas Tree This Year"));
         System.out.println(getHashTags("Hey Parents, Surprise, Fruit Juice Is Not Fruit"));
-        System.out.println(getHashTags("Visualizing Science Science"));
+        System.out.println(getHashTags("Visualizing Science"));
         System.out.println();
 
         System.out.println(ulam(4));
@@ -55,10 +55,10 @@ public class Main {
         System.out.println(convertToRoman(16));
         System.out.println();
 
-//        System.out.println(formula("6 * 4 = 24"));
-//        System.out.println(formula("18 / 17 = 2"));
-//        System.out.println(formula("16 * 10 = 160 = 14 + 120"));
-//        System.out.println();
+        System.out.println(formula("6 * 4 = 24"));
+        System.out.println(formula("18 / 17 = 2"));
+        System.out.println(formula("16 * 10 = 160 = 14 + 120"));
+        System.out.println();
 
         System.out.println(palindromeDescendant(11211230));
         System.out.println(palindromeDescendant(13001120));
@@ -113,6 +113,7 @@ public class Main {
         return rgb.matches("rgba?\\((0|([1-9]\\d?|2[0-5][0-5]|1\\d{1,2})),(0|([1-9]\\d?|2[0-5][0-5]|1\\d{1,2})),(0|([1-9]\\d?|2[0-5][0-5]|1\\d{1,2}))(,((0.\\d*)|1))?\\)");
     }
 
+    @SuppressWarnings("DuplicatedCode")
     public static String stripUrlParams(String url) {
         boolean paramsNotStated = String.join("", url.split("[^?]")).isEmpty();
         if (paramsNotStated) {
@@ -169,7 +170,7 @@ public class Main {
             String longestWord;
             while (hashTags.size() < titleWords.length) {
                 longestWord = "";
-                //TODO:
+
                 for (String titleWord : titleWords) {
                     if (hashTags.contains("#" + titleWord.toLowerCase())) {
                         continue;
@@ -277,113 +278,23 @@ public class Main {
         return thousands[num / 1000] + hundreds[(num % 1000) / 100] + tens[(num % 100) / 10] + units[num % 10];
     }
 
-    //TODO: польская запись ?
-    public static String formula(String f) {
-        String fo = String.join("", f.split("\s=.*"));
-        System.out.println(fo);
-//        \s?\d+\s?
-//        String signsWithoutForbiddenPatterns = String.join("", signs.split("[/+=\\-*]{2,}|^[/+=\\-*]|=[^=]="));
-//        return infixToRpn(fo);
-        return "";
-    }
+    public static boolean formula(String f) {
+        String[] formulaParts = f.split("\s=\s");
+        HashSet<Double> calculations = new HashSet<>();
 
-//    public static boolean letterOrDigit(char c) {
-//    // boolean check
-//        if (Character.isLetterOrDigit(c))
-//            return true;
-//        else
-//            return false;
-//    }
-//
-//    // Operator having higher precedence
-//    // value will be returned
-//    public static int getPrecedence(char ch) {
-//        if (ch == '+' || ch == '-')
-//            return 1;
-//        else if (ch == '*' || ch == '/')
-//            return 2;
-//        else if (ch == '^')
-//            return 3;
-//        else
-//            return -1;
-//    }
-//
-//    // Operator has Left --> Right associativity
-//    public static boolean hasLeftAssociativity(char ch) {
-//        if (ch == '+' || ch == '-' || ch == '/' || ch == '*') {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//
-//    // Method converts  given infixto postfix expression
-//    // to illustrate shunting yard algorithm
-//    public static String infixToRpn(String expression) {
-//        // Initialising an empty String
-//        // (for output) and an empty stack
-//        Stack<Character> stack = new Stack<>();
-//
-//        // Initially empty string taken
-//        String output = new String("");
-//
-//        // Iterating over tokens using inbuilt
-//        // .length() function
-//        for (int i = 0; i < expression.length(); ++i) {
-//            // Finding character at 'i'th index
-//            char c = expression.charAt(i);
-//
-//            // If the scanned Token is an
-//            // operand, add it to output
-//            if (letterOrDigit(c))
-//                output += c;
-//
-//            // If the scanned Token is an '('
-//            // push it to the stack
-//            else if (c == '(')
-//                stack.push(c);
-//
-//            // If the scanned Token is an ')' pop and append
-//            // it to output from the stack until an '(' is
-//            // encountered
-//            else if (c == ')') {
-//                while (!stack.isEmpty() && stack.peek() != '(') {
-//                    output += stack.pop();
-//                }
-//                stack.pop();
-//            }
-//
-//            // If an operator is encountered then taken the
-//            // further action based on the precedence of the
-//            // operator
-//
-//            else {
-//                while (!stack.isEmpty() && getPrecedence(c) <= getPrecedence(stack.peek()) && hasLeftAssociativity(c)) {
-//                    // peek() inbuilt stack function to
-//                    // fetch the top element(token)
-//                    output += stack.pop();
-//                }
-//                stack.push(c);
-//            }
-//        }
-//
-//        // pop all the remaining operators from
-//        // the stack and append them to output
-//        while (!stack.isEmpty()) {
-//            if (stack.peek() == '(') {
-//                return "This expression is invalid";
-//            }
-//            output += stack.pop();
-//        }
-//        return output;
-//    }
+        for (String part : formulaParts) {
+            Expression e = new ExpressionBuilder(part).build();
+            calculations.add(e.evaluate());
+        }
+
+        return calculations.size() == 1;
+    }
 
     public static boolean palindromeDescendant(long num) {
         String s = String.valueOf(num);
 
         while (s.length() > 1) {
-            boolean checkState = isPalindrome(s);
-            if(checkState) {
+            if(isPalindrome(s)) {
                 return true;
             }
             s = makeSumOfPairs(s);

@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Task6" options="--add-modules java.scripting" />
+      <module name="Task6" options="" />
     </option>
   </component>
 </project>
